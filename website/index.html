@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>实习日志管理系统</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <i class="fas fa-clipboard-list"></i>
+            <div>
+                <h1>实习日志管理系统</h1>
+                <p class="subtitle">记录您的实习经历，跟踪成长轨迹，为职业生涯打下坚实基础</p>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="dashboard">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title"><i class="fas fa-chart-line"></i> 实习概览</h2>
+                </div>
+                <div class="stats">
+                    <div class="stat-item">
+                        <div class="stat-value" id="totalDays">0</div>
+                        <div class="stat-label">实习天数</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" id="totalHours">0</div>
+                        <div class="stat-label">总工作时长</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" id="logCount">0</div>
+                        <div class="stat-label">日志数量</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title"><i class="fas fa-plus-circle"></i> 添加新日志</h2>
+                </div>
+                <form id="logForm">
+                    <div class="form-group">
+                        <label for="logDate">日期</label>
+                        <input type="date" id="logDate" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="logContent">工作内容</label>
+                        <textarea id="logContent" placeholder="记录今天完成的主要工作..." required></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="learnings">学习收获</label>
+                        <textarea id="learnings" placeholder="记录今天学到的新知识或技能..."></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="hours">工作时长 (小时)</label>
+                        <input type="number" id="hours" min="1" max="12" value="8" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="status">完成状态</label>
+                        <select id="status">
+                            <option value="completed">已完成</option>
+                            <option value="pending">进行中</option>
+                        </select>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-block">添加日志</button>
+                </form>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title"><i class="fas fa-list"></i> 日志管理</h2>
+                <button id="exportBtn" class="btn btn-export"><i class="fas fa-file-export"></i> 导出日志</button>
+            </div>
+            
+            <div class="search-bar">
+                <input type="text" id="searchInput" placeholder="搜索日志内容...">
+                <button id="searchBtn" class="btn"><i class="fas fa-search"></i> 搜索</button>
+                <select id="filterStatus">
+                    <option value="all">所有状态</option>
+                    <option value="completed">已完成</option>
+                    <option value="pending">进行中</option>
+                </select>
+            </div>
+            
+            <div class="log-list">
+                <div class="log-header">
+                    <div>日期</div>
+                    <div>工作内容</div>
+                    <div>学习收获</div>
+                    <div>工作时长</div>
+                    <div>状态</div>
+                    <div>操作</div>
+                </div>
+                
+                <div id="logsContainer">
+                    <div class="empty-state">
+                        <i class="fas fa-file-alt"></i>
+                        <h3>暂无实习日志</h3>
+                        <p>添加您的第一条实习日志以开始记录</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="modal" id="detailModal">
+        <div class="modal-content">
+            <span class="close-btn">&times;</span>
+            <h2>日志详情</h2>
+            <div class="modal-body">
+                <div class="detail-row">
+                    <strong>日期:</strong> <span id="detail-date"></span>
+                </div>
+                <div class="detail-row">
+                    <strong>工作内容:</strong> 
+                    <div id="detail-content" class="detail-content"></div>
+                </div>
+                <div class="detail-row">
+                    <strong>学习收获:</strong> 
+                    <div id="detail-learnings" class="detail-content"></div>
+                </div>
+                <div class="detail-row">
+                    <strong>工作时长:</strong> <span id="detail-hours"></span> 小时
+                </div>
+                <div class="detail-row">
+                    <strong>状态:</strong> <span id="detail-status"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <footer>
+        <p>实习日志管理系统 &copy; 2023 | 助力您的职业成长之路</p>
+    </footer>
+    
+    <div class="toast" id="toast">日志已成功添加！</div>
+
+    <script src="script.js"></script>
+</body>
+</html>
