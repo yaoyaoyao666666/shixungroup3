@@ -204,7 +204,7 @@ function editLog(id) {
         });
     }
 }
-
+//测试
 // 删除日志
 function deleteLog(id) {
     if (confirm('确定要删除这条日志吗？此操作不可撤销。')) {
