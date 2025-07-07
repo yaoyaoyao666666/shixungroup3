@@ -22,6 +22,7 @@
             --success-color: #4cc9f0;
             --danger-color: #f72585;
             --warning-color: #ff9e00;
+            --edit-color: #ffb703;
         }
 
         body {
@@ -128,6 +129,22 @@
             color: white;
         }
 
+        button.edit {
+            background: var(--edit-color);
+        }
+
+        button.edit:hover {
+            background: #ff9900;
+        }
+
+        button.delete {
+            background: var(--danger-color);
+        }
+
+        button.delete:hover {
+            background: #e02e6d;
+        }
+
         .main-content {
             display: flex;
             gap: 30px;
@@ -229,6 +246,11 @@
             box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
         }
 
+        .log-entry.user-own {
+            background-color: #f0f7ff;
+            border-left-color: var(--edit-color);
+        }
+
         .log-entry::before {
             content: '';
             position: absolute;
@@ -240,6 +262,10 @@
             left: -39px;
             top: 25px;
             z-index: 2;
+        }
+
+        .log-entry.user-own::before {
+            background: var(--edit-color);
         }
 
         .entry-header {
@@ -268,6 +294,10 @@
             font-size: 1.1rem;
         }
 
+        .user-own .user-avatar {
+            background: var(--edit-color);
+        }
+
         .log-date {
             color: #6c757d;
             font-size: 0.9rem;
@@ -276,12 +306,14 @@
         .entry-content {
             line-height: 1.6;
             color: #495057;
+            padding: 10px 0;
         }
 
         .entry-actions {
             display: flex;
             gap: 10px;
             margin-top: 15px;
+            justify-content: flex-end;
         }
 
         .entry-actions button {
@@ -340,6 +372,39 @@
             line-height: 1.6;
         }
 
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+        }
+
+        #edit-controls {
+            display: none;
+            margin-top: 15px;
+        }
+
+        .filters {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .filter-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: #f0f4ff;
+            padding: 8px 15px;
+            border-radius: 30px;
+            font-size: 0.9rem;
+        }
+
+        .filter-item select, .filter-item input {
+            padding: 6px 12px;
+            border-radius: 20px;
+            border: 1px solid #ddd;
+        }
+
         @media (max-width: 768px) {
             header {
                 flex-direction: column;
@@ -353,6 +418,10 @@
             }
             
             .main-content {
+                flex-direction: column;
+            }
+            
+            .action-buttons {
                 flex-direction: column;
             }
         }
@@ -411,6 +480,20 @@
                     <label for="log-content">日志内容</label>
                     <textarea id="log-content" placeholder="记录您今天的实习经历、学到的新知识和遇到的问题..."></textarea>
                 </div>
+                
+                <div id="edit-controls">
+                    <p style="margin-bottom: 15px; color: var(--warning-color); font-weight: 600;">
+                        <i class="fas fa-exclamation-circle"></i> 您正在编辑一条日志
+                    </p>
+                    <div class="action-buttons">
+                        <button id="update-log" class="edit">
+                            <i class="fas fa-sync-alt"></i> 更新日志
+                        </button>
+                        <button id="cancel-edit" class="secondary">
+                            <i class="fas fa-times"></i> 取消编辑
+                        </button>
+                    </div>
+                </div>
             </section>
 
             <section class="logs-section">
@@ -418,6 +501,28 @@
                     <i class="fas fa-history"></i> 历史日志
                     <span id="log-count">(0)</span>
                 </h2>
+                
+                <div class="filters">
+                    <div class="filter-item">
+                        <i class="fas fa-filter"></i>
+                        <label for="date-filter">日期：</label>
+                        <input type="date" id="date-filter">
+                    </div>
+                    
+                    <div class="filter-item">
+                        <i class="fas fa-user"></i>
+                        <label for="user-filter">用户：</label>
+                        <select id="user-filter">
+                            <option value="">所有用户</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-item">
+                        <button id="reset-filters" class="secondary" style="padding: 8px 15px;">
+                            <i class="fas fa-redo"></i> 重置筛选
+                        </button>
+                    </div>
+                </div>
                 
                 <div class="timeline" id="logs-container">
                     <!-- 日志内容会动态加载在这里 -->
@@ -430,15 +535,17 @@
             <ol>
                 <li>输入您的姓名（用于标识您的日志）和日志内容</li>
                 <li>点击"保存日志"将日志保存到本地存储</li>
+                <li>点击每条日志旁边的编辑按钮可修改内容</li>
+                <li>点击删除按钮可移除您的日志</li>
                 <li>当需要与他人共享时，点击"导出数据"下载logs.json文件</li>
                 <li>将logs.json文件分享给团队其他成员</li>
                 <li>其他成员下载logs.json后，点击"导入数据"并选择该文件</li>
-                <li>您也可以将整个项目文件夹(包含index.html和logs.json)上传到Gitee进行共享</li>
+                <li>您也可以将整个项目文件夹上传到Gitee进行共享</li>
             </ol>
         </div>
 
         <footer>
-            <p>© 2023 多人实习日志协作系统 | 基于Web存储技术 | 可在本地运行并共享数据</p>
+            <p>© 2023 多人实习日志协作系统 | 支持日志编辑与删除 | 基于Web存储技术</p>
         </footer>
     </div>
 
@@ -466,6 +573,12 @@
             const fileInput = document.getElementById('file-input');
             const notification = document.getElementById('notification');
             const notificationText = document.getElementById('notification-text');
+            const editControls = document.getElementById('edit-controls');
+            const updateLogBtn = document.getElementById('update-log');
+            const cancelEditBtn = document.getElementById('cancel-edit');
+            const dateFilter = document.getElementById('date-filter');
+            const userFilter = document.getElementById('user-filter');
+            const resetFiltersBtn = document.getElementById('reset-filters');
             
             // 设置日期默认值为今天
             const today = new Date().toISOString().split('T')[0];
@@ -480,6 +593,9 @@
             
             // 从localStorage加载日志
             let logs = JSON.parse(localStorage.getItem('logs')) || [];
+            
+            // 当前编辑的日志ID
+            let editingLogId = null;
             
             // 加载日志列表
             renderLogs();
@@ -520,6 +636,44 @@
                 
                 showNotification('日志保存成功', 'success');
             });
+            
+            // 更新日志按钮点击事件
+            updateLogBtn.addEventListener('click', function() {
+                if (editingLogId === null) return;
+                
+                const logIndex = logs.findIndex(log => log.id === editingLogId);
+                if (logIndex === -1) return;
+                
+                if (!userNameInput.value.trim()) {
+                    showNotification('请输入您的姓名', 'warning');
+                    return;
+                }
+                
+                if (!logContentInput.value.trim()) {
+                    showNotification('请输入日志内容', 'warning');
+                    return;
+                }
+                
+                // 更新日志
+                logs[logIndex].userName = userNameInput.value.trim();
+                logs[logIndex].date = logDateInput.value;
+                logs[logIndex].content = logContentInput.value.trim();
+                logs[logIndex].timestamp = new Date().toISOString();
+                
+                // 保存到localStorage
+                localStorage.setItem('logs', JSON.stringify(logs));
+                
+                // 刷新日志列表
+                renderLogs();
+                
+                // 退出编辑模式
+                cancelEdit();
+                
+                showNotification('日志更新成功', 'success');
+            });
+            
+            // 取消编辑按钮点击事件
+            cancelEditBtn.addEventListener('click', cancelEdit);
             
             // 导出数据按钮
             exportBtn.addEventListener('click', function() {
@@ -597,6 +751,19 @@
                 }
             });
             
+            // 日期筛选变化
+            dateFilter.addEventListener('change', renderLogs);
+            
+            // 用户筛选变化
+            userFilter.addEventListener('change', renderLogs);
+            
+            // 重置筛选按钮
+            resetFiltersBtn.addEventListener('click', function() {
+                dateFilter.value = '';
+                userFilter.value = '';
+                renderLogs();
+            });
+            
             // 渲染日志列表
             function renderLogs() {
                 // 清空容器
@@ -605,9 +772,12 @@
                 // 设置日志数量
                 logCountSpan.textContent = `(${logs.length})`;
                 
+                // 更新用户筛选列表
+                updateUserFilter();
+                
                 if (logs.length === 0) {
                     logsContainer.innerHTML = `
-                        <div class="empty-state">
+                        <div class="empty-state" style="text-align: center; padding: 40px 0; color: #6c757d;">
                             <i class="fas fa-file-alt" style="font-size: 3rem; color: #ccc; margin-bottom: 15px;"></i>
                             <p>还没有日志记录</p>
                         </div>
@@ -615,9 +785,33 @@
                     return;
                 }
                 
+                // 应用筛选条件
+                let filteredLogs = [...logs];
+                
+                // 日期筛选
+                if (dateFilter.value) {
+                    filteredLogs = filteredLogs.filter(log => log.date === dateFilter.value);
+                }
+                
+                // 用户筛选
+                if (userFilter.value) {
+                    filteredLogs = filteredLogs.filter(log => log.userName === userFilter.value);
+                }
+                
+                if (filteredLogs.length === 0) {
+                    logsContainer.innerHTML = `
+                        <div class="empty-state" style="text-align: center; padding: 40px 0; color: #6c757d;">
+                            <i class="fas fa-search" style="font-size: 3rem; color: #ccc; margin-bottom: 15px;"></i>
+                            <p>没有找到符合条件的日志</p>
+                            <p>请尝试其他筛选条件</p>
+                        </div>
+                    `;
+                    return;
+                }
+                
                 // 按日期分组
                 const logsByDate = {};
-                logs.forEach(log => {
+                filteredLogs.forEach(log => {
                     if (!logsByDate[log.date]) logsByDate[log.date] = [];
                     logsByDate[log.date].push(log);
                 });
@@ -634,14 +828,16 @@
                     
                     logsByDate[date].forEach(log => {
                         const firstInitial = log.userName.charAt(0).toUpperCase();
+                        const isOwnLog = log.userId === userId;
+                        
                         const logElement = document.createElement('div');
-                        logElement.className = 'log-entry';
+                        logElement.className = `log-entry ${isOwnLog ? 'user-own' : ''}`;
                         logElement.innerHTML = `
                             <div class="entry-header">
                                 <div class="user-badge">
                                     <div class="user-avatar">${firstInitial}</div>
                                     <div>
-                                        <div class="user-name">${log.userName}</div>
+                                        <div class="user-name">${log.userName} ${isOwnLog ? '<span style="color: var(--edit-color); font-size: 0.8rem;">(我)</span>' : ''}</div>
                                     </div>
                                 </div>
                                 <div class="log-date">${formatDate(log.date)}</div>
@@ -649,9 +845,120 @@
                             <div class="entry-content">${log.content.replace(/\n/g, '<br>')}</div>
                         `;
                         
+                        // 如果是当前用户的日志，添加操作按钮
+                        if (isOwnLog) {
+                            const actionsDiv = document.createElement('div');
+                            actionsDiv.className = 'entry-actions';
+                            actionsDiv.innerHTML = `
+                                <button class="edit" data-id="${log.id}">
+                                    <i class="fas fa-edit"></i> 编辑
+                                </button>
+                                <button class="delete" data-id="${log.id}">
+                                    <i class="fas fa-trash"></i> 删除
+                                </button>
+                            `;
+                            logElement.appendChild(actionsDiv);
+                            
+                            // 添加编辑事件
+                            actionsDiv.querySelector('button.edit').addEventListener('click', function() {
+                                startEdit(log.id);
+                            });
+                            
+                            // 添加删除事件
+                            actionsDiv.querySelector('button.delete').addEventListener('click', function() {
+                                deleteLog(log.id);
+                            });
+                        }
+                        
                         logsContainer.appendChild(logElement);
                     });
                 });
+                
+                // 设置当前用户显示
+                if (userNameInput.value.trim()) {
+                    currentUserSpan.textContent = userNameInput.value.trim();
+                }
+            }
+            
+            // 更新用户筛选器
+            function updateUserFilter() {
+                // 获取所有不重复的用户名
+                const users = [...new Set(logs.map(log => log.userName))].sort();
+                
+                // 保存当前选中的用户
+                const selectedUser = userFilter.value;
+                
+                // 更新筛选器
+                userFilter.innerHTML = '<option value="">所有用户</option>';
+                users.forEach(user => {
+                    const option = document.createElement('option');
+                    option.value = user;
+                    option.textContent = user;
+                    if (user === selectedUser) {
+                        option.selected = true;
+                    }
+                    userFilter.appendChild(option);
+                });
+            }
+            
+            // 开始编辑日志
+            function startEdit(logId) {
+                const log = logs.find(log => log.id === logId);
+                if (!log) return;
+                
+                // 设置编辑状态
+                editingLogId = logId;
+                
+                // 填充表单
+                userNameInput.value = log.userName;
+                logDateInput.value = log.date;
+                logContentInput.value = log.content;
+                
+                // 隐藏保存按钮，显示编辑按钮
+                saveLogBtn.style.display = 'none';
+                editControls.style.display = 'block';
+                
+                // 滚动到编辑区域
+                document.querySelector('.editor-section').scrollIntoView({ behavior: 'smooth' });
+                
+                showNotification('您正在编辑日志，修改完成后点击"更新日志"', 'info');
+            }
+            
+            // 取消编辑
+            function cancelEdit() {
+                // 重置编辑状态
+                editingLogId = null;
+                
+                // 重置表单（保留用户名）
+                logDateInput.value = today;
+                logContentInput.value = '';
+                
+                // 显示保存按钮，隐藏编辑按钮
+                saveLogBtn.style.display = 'flex';
+                editControls.style.display = 'none';
+                
+                showNotification('已取消编辑', 'info');
+            }
+            
+            // 删除日志
+            function deleteLog(logId) {
+                if (confirm('确定要删除这条日志吗？删除后无法恢复。')) {
+                    // 过滤掉要删除的日志
+                    logs = logs.filter(log => log.id !== logId);
+                    
+                    // 保存到localStorage
+                    localStorage.setItem('logs', JSON.stringify(logs));
+                    
+                    // 刷新日志列表
+                    renderLogs();
+                    
+                    // 如果删除的是当前正在编辑的日志，取消编辑状态
+                    if (editingLogId === logId) {
+                        cancelEdit();
+                    }
+                    
+                    showNotification('日志已删除', 'success');
+                }
             }
             
             // 日期格式化
@@ -679,6 +986,9 @@
                         break;
                     case 'warning':
                         notification.style.background = 'var(--warning-color)';
+                        break;
+                    case 'info':
+                        notification.style.background = 'var(--accent-color)';
                         break;
                     default:
                         notification.style.background = 'var(--accent-color)';
