@@ -27,7 +27,7 @@ const sampleLogs = [
     },
     {
         id: 4,
-        date: "2023-07-04",
+        date: "2023-07-04",// 测试
         content: "与导师讨论界面设计细节，进行修改优化",
         learnings: "学习了用户体验设计的基本原则",
         hours: 6,
